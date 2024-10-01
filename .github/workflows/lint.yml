@@ -1,4 +1,4 @@
-name: Unit tests
+name: Lint
 
 # Controls when the workflow will run
 on:
@@ -13,7 +13,7 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  test:
+  lint:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
@@ -32,10 +32,7 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Check for syntax errors or undefined names
         run: | 
-          flake8 src tests --count --select=E9,F63,F7,F82 --show-source --statistics
-      - name: Test with pytest
-        run: |
-          pytest
+          flake8 src --count --select=E9,F63,F7,F82 --show-source --statistics
       - name: Lint with flake8
         run: | 
-          flake8 --ignore=E501 src tests --show-source
+          flake8 --ignore=E501 src --show-source
