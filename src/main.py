@@ -126,7 +126,7 @@ if keycloak.authenticated:
                 if cpr_list:
                     cpr_dict_list = [get_cpr_search(cpr, st.session_state.USER, st.session_state.CPR) for cpr in cpr_list]
                     search_result = [search(cpr_dict, st.session_state.USER) for cpr_dict in cpr_dict_list]
-                    email_list = [r[0]['E-mail'] if r else 'IKKE_FUNDET' for r in search_result]
+                    email_list = [r[0]['E-mail'] if r[0]['DQ-nummer'] != '-' else 'IKKE_FUNDET' for r in search_result]
                     emails = f'''{','.join(email_list)}'''
                     st.code(emails)
                 else:
