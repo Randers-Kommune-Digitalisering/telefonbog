@@ -470,11 +470,14 @@ def search(search_dict=None, user=None):
     if user:
         if search_dict:
             res = delta_client.make_request(method='POST', path='graph-query', json=search_dict)
-
-            result = res.get('graphQueryResult', [])
-
-            if len(result) > 0:
-                instances = result[0].get('instances', [])
+            res = None
+            if res:
+                res = res.get('graphQueryResult', [])
+            else:
+                raise ValueError('Intet svar fra Delta')
+            
+            if len(res) > 0:
+                instances = res[0].get('instances', [])
                 if len(instances) < 1:
                     return None
                 else:

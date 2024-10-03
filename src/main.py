@@ -87,27 +87,30 @@ if keycloak.authenticated:
             st.error(st.session_state.error)
         if st.session_state.search:
             with st.spinner('Søger...'):
-                if st.session_state.search:
-                    result = search(st.session_state.search, st.session_state.USER)
-                    if result:
-                        if len(result) == 1:
-                            r = result[0]
-                            with st.expander(r['Navn'], expanded=True):
-                                top_line = '| ' + ' | '.join(['Navn', 'DQ-nummer', 'Afdeling']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['Navn'], r['DQ-nummer'], r['Afdeling']]) + ' |'
-                                buttom_line = '| ' + ' | '.join(['E-mail', 'Telefon', 'Mobil']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['E-mail'], r['Telefon'], r['Mobil']]) + ' |'
-                                st.markdown(top_line)
-                                st.markdown(buttom_line)
-                        elif len(result) > 1:
-                            for r in result:
-                                with st.expander(r['Navn'], expanded=False):
+                try:
+                    if st.session_state.search:
+                        result = search(st.session_state.search, st.session_state.USER)
+                        if result:
+                            if len(result) == 1:
+                                r = result[0]
+                                with st.expander(r['Navn'], expanded=True):
                                     top_line = '| ' + ' | '.join(['Navn', 'DQ-nummer', 'Afdeling']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['Navn'], r['DQ-nummer'], r['Afdeling']]) + ' |'
                                     buttom_line = '| ' + ' | '.join(['E-mail', 'Telefon', 'Mobil']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['E-mail'], r['Telefon'], r['Mobil']]) + ' |'
                                     st.markdown(top_line)
                                     st.markdown(buttom_line)
+                            elif len(result) > 1:
+                                for r in result:
+                                    with st.expander(r['Navn'], expanded=False):
+                                        top_line = '| ' + ' | '.join(['Navn', 'DQ-nummer', 'Afdeling']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['Navn'], r['DQ-nummer'], r['Afdeling']]) + ' |'
+                                        buttom_line = '| ' + ' | '.join(['E-mail', 'Telefon', 'Mobil']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['E-mail'], r['Telefon'], r['Mobil']]) + ' |'
+                                        st.markdown(top_line)
+                                        st.markdown(buttom_line)
+                            else:
+                                st.write("Ingen resultater")
                         else:
                             st.write("Ingen resultater")
-                    else:
-                        st.write("Ingen resultater")
+                except Exception as e:
+                    st.error(f'Fejl: {e}')
     with lookup:
         txt = st.text_area(label="CPR-numre", placeholder="Indsæt CPR-numre her - adskildt med ' , ' (komma)", disabled=not st.session_state.CPR)
 
@@ -122,15 +125,18 @@ if keycloak.authenticated:
 
         if st.button("Slå e-mails op", disabled=disable_button):
             with st.spinner('Søger...'):
-                cpr_list = get_cpr_list(txt)
-                if cpr_list:
-                    cpr_dict_list = [get_cpr_search(cpr, st.session_state.USER, st.session_state.CPR) for cpr in cpr_list]
-                    search_result = [search(cpr_dict, st.session_state.USER) for cpr_dict in cpr_dict_list]
-                    email_list = [r[0]['E-mail'] if r[0]['DQ-nummer'] != '-' else 'IKKE_FUNDET' for r in search_result]
-                    emails = f'''{','.join(email_list)}'''
-                    st.code(emails)
-                else:
-                    st.error('Ugyldigt CPR-nummer')
+                try:
+                    cpr_list = get_cpr_list(txt)
+                    if cpr_list:
+                        cpr_dict_list = [get_cpr_search(cpr, st.session_state.USER, st.session_state.CPR) for cpr in cpr_list]
+                        search_result = [search(cpr_dict, st.session_state.USER) for cpr_dict in cpr_dict_list]
+                        email_list = [r[0]['E-mail'] if r[0]['DQ-nummer'] != '-' else 'IKKE_FUNDET' for r in search_result]
+                        emails = f'''{','.join(email_list)}'''
+                        st.code(emails)
+                    else:
+                        st.error('Ugyldigt CPR-nummer')
+                except Exception as e:
+                    st.error(f'Fejl: {e}')
 
 else:
     st.write("Du er ikke logget ind")
