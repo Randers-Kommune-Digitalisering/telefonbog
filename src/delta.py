@@ -470,7 +470,7 @@ def search(search_dict=None, user=None):
     if user:
         if search_dict:
             res = delta_client.make_request(method='POST', path='graph-query', json=search_dict)
-            res = None
+
             if res:
                 res = res.get('graphQueryResult', [])
             else:
