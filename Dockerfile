@@ -28,5 +28,5 @@ EXPOSE $PORT
 # Set user
 USER $USER_ID
 
-ENTRYPOINT ["streamlit",  "run",  "main.py", "--server.port", "8080", "--client.toolbarMode=minimal"]
-# CMD ["main.py"]
+ENTRYPOINT ["python"]
+CMD ["main.py"]

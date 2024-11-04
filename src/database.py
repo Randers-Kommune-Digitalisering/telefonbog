@@ -25,7 +25,6 @@ def get_session():
 
 
 def create_database():
-    engine = get_engine()
     with engine.connect() as connection:
         connection.execute(CreateSchema(DB_SCHEMA, if_not_exists=True))
         connection.commit()
