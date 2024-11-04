@@ -7,7 +7,7 @@ from models import Base
 
 
 def get_engine():
-    connection_string = f"postgresql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}"
+    connection_string = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}'
     engine = create_engine(connection_string)
     return engine
 
