@@ -94,15 +94,15 @@ if keycloak.authenticated:
                             if len(result) == 1:
                                 r = result[0]
                                 with st.expander(r['Navn'], expanded=True):
-                                    top_line = '| ' + ' | '.join(['Navn', 'DQ-nummer', 'Afdeling']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['Navn'], r['DQ-nummer'], r['Afdeling']]) + ' |'
-                                    buttom_line = '| ' + ' | '.join(['E-mail', 'Telefon', 'Mobil']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['E-mail'], r['Telefon'], r['Mobil']]) + ' |'
+                                    top_line = '| ' + ' | '.join(['Navn', 'DQ-nummer', 'Afdeling']) + ' |' + '\n| ' + ' | '.join(['---'] * 3) + ' |' + '\n| ' + ' | '.join([r['Navn'], r['DQ-nummer'], r['Afdeling']]) + ' |'
+                                    buttom_line = '| ' + ' | '.join(['E-mail', 'Telefon', 'Mobil']) + ' |' + '\n| ' + ' | '.join(['---'] * 3) + ' |' + '\n| ' + ' | '.join([r['E-mail'], r['Telefon'], r['Mobil']]) + ' |'
                                     st.markdown(top_line)
                                     st.markdown(buttom_line)
                             elif len(result) > 1:
                                 for r in result:
                                     with st.expander(r['Navn'], expanded=False):
-                                        top_line = '| ' + ' | '.join(['Navn', 'DQ-nummer', 'Afdeling']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['Navn'], r['DQ-nummer'], r['Afdeling']]) + ' |'
-                                        buttom_line = '| ' + ' | '.join(['E-mail', 'Telefon', 'Mobil']) + ' |' + '\n| ' + ' | '.join(['---']*3) + ' |' + '\n| ' + ' | '.join([r['E-mail'], r['Telefon'], r['Mobil']]) + ' |'
+                                        top_line = '| ' + ' | '.join(['Navn', 'DQ-nummer', 'Afdeling']) + ' |' + '\n| ' + ' | '.join(['---'] * 3) + ' |' + '\n| ' + ' | '.join([r['Navn'], r['DQ-nummer'], r['Afdeling']]) + ' |'
+                                        buttom_line = '| ' + ' | '.join(['E-mail', 'Telefon', 'Mobil']) + ' |' + '\n| ' + ' | '.join(['---'] * 3) + ' |' + '\n| ' + ' | '.join([r['E-mail'], r['Telefon'], r['Mobil']]) + ' |'
                                         st.markdown(top_line)
                                         st.markdown(buttom_line)
                             else:

@@ -156,30 +156,30 @@ def get_cpr_search(cpr, user=None, has_cpr_rights=False):
                                 "APOS-Types-Engagement-Attribute-Email"
                             ],
                             "typeRelations": [
-                                    {
-                                        "userKey": "APOS-Types-Engagement-TypeRelation-Person",
-                                        "projection": {
-                                            "state": True,
-                                            "attributes": [
-                                                "APOS-Types-Person-Attribute-SurnameAndName"
-                                            ],
-                                            "incomingTypeRelations": [
-                                                {
-                                                    "userKey": "APOS-Types-User-TypeRelation-Person",
-                                                    "projection": {
-                                                        "identity": True
-                                                    }
+                                {
+                                    "userKey": "APOS-Types-Engagement-TypeRelation-Person",
+                                    "projection": {
+                                        "state": True,
+                                        "attributes": [
+                                            "APOS-Types-Person-Attribute-SurnameAndName"
+                                        ],
+                                        "incomingTypeRelations": [
+                                            {
+                                                "userKey": "APOS-Types-User-TypeRelation-Person",
+                                                "projection": {
+                                                    "identity": True
                                                 }
-                                            ]
-                                        }
-                                    },
-                                    {
-                                        "userKey": "APOS-Types-Engagement-TypeRelation-AdmUnit",
-                                        "projection": {
-                                            "identity": True
-                                        }
+                                            }
+                                        ]
                                     }
-                                ]
+                                },
+                                {
+                                    "userKey": "APOS-Types-Engagement-TypeRelation-AdmUnit",
+                                    "projection": {
+                                        "identity": True
+                                    }
+                                }
+                            ]
                         }
                     },
                     "validDate": "NOW",
@@ -280,30 +280,30 @@ def get_dq_number_search(dq_number, user=None):
                                 "APOS-Types-Engagement-Attribute-Email"
                             ],
                             "typeRelations": [
-                                    {
-                                        "userKey": "APOS-Types-Engagement-TypeRelation-Person",
-                                        "projection": {
-                                            "state": True,
-                                            "attributes": [
-                                                "APOS-Types-Person-Attribute-SurnameAndName"
-                                            ],
-                                            "incomingTypeRelations": [
-                                                {
-                                                    "userKey": "APOS-Types-User-TypeRelation-Person",
-                                                    "projection": {
-                                                        "identity": True
-                                                    }
+                                {
+                                    "userKey": "APOS-Types-Engagement-TypeRelation-Person",
+                                    "projection": {
+                                        "state": True,
+                                        "attributes": [
+                                            "APOS-Types-Person-Attribute-SurnameAndName"
+                                        ],
+                                        "incomingTypeRelations": [
+                                            {
+                                                "userKey": "APOS-Types-User-TypeRelation-Person",
+                                                "projection": {
+                                                    "identity": True
                                                 }
-                                            ]
-                                        }
-                                    },
-                                    {
-                                        "userKey": "APOS-Types-Engagement-TypeRelation-AdmUnit",
-                                        "projection": {
-                                            "identity": True
-                                        }
+                                            }
+                                        ]
                                     }
-                                ]
+                                },
+                                {
+                                    "userKey": "APOS-Types-Engagement-TypeRelation-AdmUnit",
+                                    "projection": {
+                                        "identity": True
+                                    }
+                                }
+                            ]
                         }
                     },
                     "validDate": "NOW",
@@ -483,7 +483,7 @@ def search(search_dict=None, user=None):
                 res = res.get('graphQueryResult', [])
             else:
                 raise ValueError('Intet svar fra Delta')
-            
+
             if len(res) > 0:
                 instances = res[0].get('instances', [])
                 if len(instances) < 1:
