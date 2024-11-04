@@ -11,6 +11,9 @@ ENV PORT=8080
 RUN addgroup --gid $GROUP_ID $GROUP_NAME && \
     adduser $USER_ID -u $USER_ID -D -G $GROUP_NAME -h $HOME
 
+# Install dependencies
+RUN apt-get update && apt-get install -y gcc libpq-dev
+
 # Copy files and set working dir
 COPY ./src $HOME
 WORKDIR $HOME
@@ -25,5 +28,5 @@ EXPOSE $PORT
 # Set user
 USER $USER_ID
 
-ENTRYPOINT ["streamlit",  "run",  "main.py", "--server.port", "8080", "--client.toolbarMode=minimal"]
-# CMD ["main.py"]
+ENTRYPOINT ["python"]
+CMD ["main.py"]

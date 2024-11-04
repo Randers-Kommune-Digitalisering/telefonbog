@@ -3,6 +3,8 @@ import logging
 import requests_pkcs12 as requests
 
 from config import DELTA_CERT_PASSWORD, DELTA_CERT_BASE64
+from models import Log
+from database import get_session
 
 logger = logging.getLogger(__name__)
 
@@ -65,7 +67,10 @@ delta_client = APIClient('https://delta-cert.kmd.dk/api/object', password=DELTA_
 
 def get_cpr_search(cpr, user=None, has_cpr_rights=False):
     if user and has_cpr_rights:
-        logger.info(f'User {user["username"]} (email: {user["email"]}) is searching for CPR: {cpr}')
+        db_session = get_session()
+        search_log = Log(username=user["username"], email=user["email"], message=f"Searched for cpr: {cpr}")
+        db_session.add(search_log)
+        db_session.commit()
         return {
             "graphQueries": [
                 {
@@ -186,7 +191,10 @@ def get_cpr_search(cpr, user=None, has_cpr_rights=False):
 
 def get_dq_number_search(dq_number, user=None):
     if user:
-        logger.info(f'User {user["username"]} (email: {user["email"]}) is searching for: {dq_number}')
+        db_session = get_session()
+        search_log = Log(username=user["username"], email=user["email"], message=f"Searched for DQ-number: {dq_number}")
+        db_session.add(search_log)
+        db_session.commit()
         return {
             "graphQueries": [
                 {
