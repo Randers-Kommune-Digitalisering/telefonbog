@@ -8,7 +8,7 @@ on:
     tags:
       - 'v*.*.*'
   workflow_run:
-    workflows: [Lint]
+    workflows: [Unit tests]
     branches: [develop, main]
     types: 
       - completed
