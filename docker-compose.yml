@@ -1,15 +1,18 @@
 version: "3.9"
 services:
-  app:
-    build: .
-    read_only: true
-    networks:
-      - app_network
+   db:
+    image: postgres:16.1
+    restart: always
+    #user: postgres
+    # Open ports for testing
     ports:
-      - "8080:8080"
+      - 5432:5432
     environment:
-      DEBUG: True
-
-networks: 
-  app_network:
-    name: app_network
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: user
+      POSTGRES_DB: demo
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -q -U user -d demo" ]
+      start_period: 5s
+      interval: 5s
+      timeout: 5s

@@ -11,6 +11,9 @@ ENV PORT=8080
 RUN addgroup --gid $GROUP_ID $GROUP_NAME && \
     adduser $USER_ID -u $USER_ID -D -G $GROUP_NAME -h $HOME
 
+# Install dependencies
+RUN apk update && apk add --no-cache gcc musl-dev postgresql-dev
+
 # Copy files and set working dir
 COPY ./src $HOME
 WORKDIR $HOME
