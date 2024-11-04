@@ -1,3 +1,5 @@
+import urllib.parse
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import CreateSchema
@@ -7,7 +9,8 @@ from models import Base
 
 
 def get_engine():
-    connection_string = f'postgresql+psycopg2://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}'
+    password = urllib.parse.quote_plus(DB_PASS)
+    connection_string = f'postgresql+psycopg2://{DB_USER}:{password}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}'
     engine = create_engine(connection_string)
     return engine
 
