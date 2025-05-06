@@ -5,7 +5,7 @@ from streamlit_keycloak import login
 
 from delta import get_cpr_search, get_dq_number_search, search  # , get_general_search
 from utils.utils import set_logging_configuration, verify_cpr, get_cpr_list
-from config import KEYCLOAK_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT
+from utils.config import KEYCLOAK_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT
 
 set_logging_configuration()
 
