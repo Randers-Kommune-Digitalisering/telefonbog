@@ -4,9 +4,10 @@ import logging
 
 
 class APIClient:
-    def __init__(self, base_url, api_key=None, realm=None, client_id=None, client_secret=None, username=None, password=None, cert_base64=None):
+    def __init__(self, base_url, api_key=None, auth_url=None, realm=None, client_id=None, client_secret=None, username=None, password=None, cert_base64=None):
         self.base_url = base_url
         self.api_key = api_key
+        self.auth_url = auth_url
         self.realm = realm
         self.client_id = client_id
         self.client_secret = client_secret
@@ -43,7 +44,8 @@ class APIClient:
                                 if time.time() < self.refresh_token_expiry:
                                     refresh_token = True
 
-            tmp_url = f'{self.base_url}/auth/realms/{self.realm}/protocol/openid-connect/token'
+            tmp_base_url = self.auth_url or self.base_url
+            tmp_url = f'{tmp_base_url}/realms/{self.realm}/protocol/openid-connect/token'
 
             tmp_headers = {
                 'Content-Type': 'application/x-www-form-urlencoded'
