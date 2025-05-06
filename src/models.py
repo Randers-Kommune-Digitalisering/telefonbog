@@ -1,7 +1,7 @@
 from sqlalchemy import MetaData
 from sqlalchemy.ext.declarative import declarative_base
 
-from config import DB_SCHEMA
+from utils.config import DB_SCHEMA
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.sql import func
 

@@ -1,6 +1,6 @@
 import logging
 
-from config import DELTA_URL, DELTA_AUTH_URL, DELTA_REALM, DELTA_CLIENT_ID, DELTA_CLIENT_SECRET
+from utils.config import DELTA_URL, DELTA_AUTH_URL, DELTA_REALM, DELTA_CLIENT_ID, DELTA_CLIENT_SECRET
 from utils.api_requests import APIClient
 from models import Log
 from database import get_session
