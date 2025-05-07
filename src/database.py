@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.schema import CreateSchema
 
-from config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_DATABASE, DB_SCHEMA
+from utils.config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_DATABASE, DB_SCHEMA
 from models import Base
 
 

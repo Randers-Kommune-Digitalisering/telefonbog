@@ -1,6 +1,6 @@
 python-dotenv
 requests-pkcs12
 streamlit
-streamlit-keycloak
+streamlit-keycloak-zpl
 SQLAlchemy
 psycopg2-binary

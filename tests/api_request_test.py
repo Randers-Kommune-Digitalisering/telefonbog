@@ -33,7 +33,7 @@ def test_authenticate_client_credentials(mock_post, mock_time):
     mock_post.return_value = res
 
     assert api_client._authenticate() == {'Authorization': 'Bearer test_token'}
-    mock_post.assert_called_once_with('http://testurl.com/auth/realms/test_realm/protocol/openid-connect/token', headers={'Content-Type': 'application/x-www-form-urlencoded'}, data={'client_id': 'test_id', 'client_secret': 'test_secret', 'grant_type': 'client_credentials'})
+    mock_post.assert_called_once_with('http://testurl.com/realms/test_realm/protocol/openid-connect/token', headers={'Content-Type': 'application/x-www-form-urlencoded'}, data={'client_id': 'test_id', 'client_secret': 'test_secret', 'grant_type': 'client_credentials'})
     assert api_client.token_expiry == 10
     assert api_client.refresh_token_expiry == 20
     assert api_client.refresh_token == 'test_refresh_token'
@@ -54,7 +54,7 @@ def test_authenticate_user_password(mock_post, mock_time):
     mock_post.return_value = res
 
     assert api_client._authenticate() == {'Authorization': 'Bearer test_token'}
-    mock_post.assert_called_once_with('http://testurl.com/auth/realms/test_realm/protocol/openid-connect/token', headers={'Content-Type': 'application/x-www-form-urlencoded'}, data={'client_id': 'test_id', 'client_secret': 'test_secret', 'grant_type': 'password', 'username': 'test_user', 'password': 'test_pass'})
+    mock_post.assert_called_once_with('http://testurl.com/realms/test_realm/protocol/openid-connect/token', headers={'Content-Type': 'application/x-www-form-urlencoded'}, data={'client_id': 'test_id', 'client_secret': 'test_secret', 'grant_type': 'password', 'username': 'test_user', 'password': 'test_pass'})
     assert api_client.token_expiry == 10
     assert api_client.refresh_token_expiry == 20
     assert api_client.refresh_token == 'test_refresh_token'
@@ -84,7 +84,7 @@ def test_authenticate_refresh_token(mock_post, mock_time):
     mock_post.return_value = res
 
     assert api_client._authenticate() == {'Authorization': 'Bearer test_token'}
-    mock_post.assert_called_once_with('http://testurl.com/auth/realms/test_realm/protocol/openid-connect/token', headers={'Content-Type': 'application/x-www-form-urlencoded'}, data={'client_id': 'test_id', 'client_secret': 'test_secret', 'grant_type': 'refresh_token', 'refresh_token': 'test_refresh_token'})
+    mock_post.assert_called_once_with('http://testurl.com/realms/test_realm/protocol/openid-connect/token', headers={'Content-Type': 'application/x-www-form-urlencoded'}, data={'client_id': 'test_id', 'client_secret': 'test_secret', 'grant_type': 'refresh_token', 'refresh_token': 'test_refresh_token'})
     assert api_client.token_expiry == 25  # time now is 15
     assert api_client.refresh_token_expiry == 35  # time now is 15
     assert api_client.refresh_token == 'test_refresh_token'
