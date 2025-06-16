@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y gcc libpq-dev
 COPY ./src $HOME
 WORKDIR $HOME
 
+RUN chown -R $USER_ID:$GROUP_ID $HOME && chmod -R 775 $HOME
+
 # Install python packages
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
