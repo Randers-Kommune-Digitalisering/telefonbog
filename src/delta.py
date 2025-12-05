@@ -82,6 +82,8 @@ def get_cpr_search(cpr: str, user: dict = None, has_cpr_rights: bool = False) ->
     :type user: dict
     :param has_cpr_rights: Indicates if the user has rights to search by CPR number
     :type has_cpr_rights: bool
+    :return: A dictionary containing the search query if user and has_cpr_rights are provided, otherwise None.
+    :rtype: dict | None
     """
     if user and has_cpr_rights:
         db_session = get_session()
