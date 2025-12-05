@@ -8,7 +8,7 @@ from utils.config import DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_DATABASE, DB_SCH
 from models import Base
 
 
-def _get_engine() -> Engine:
+def get_engine() -> Engine:
     """Create and return a SQLAlchemy engine connected to the PostgreSQL database."""
     password = urllib.parse.quote_plus(DB_PASS)
     connection_string = f'postgresql+psycopg2://{DB_USER}:{password}@{DB_HOST}:{DB_PORT}/{DB_DATABASE}'
@@ -16,7 +16,7 @@ def _get_engine() -> Engine:
     return engine
 
 
-engine = _get_engine()
+engine = get_engine()
 SessionLocal = sessionmaker(bind=engine)
 
 
