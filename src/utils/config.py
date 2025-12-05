@@ -9,9 +9,6 @@ DELTA_CLIENT_SECRET = os.environ["DELTA_CLIENT_SECRET"].strip()
 DELTA_REALM = '730'
 DELTA_AUTH_URL = "https://idp.opus-universe.kmd.dk"
 
-# DELTA_CERT_BASE64 = os.environ["DELTA_CERT_BASE64"].strip()
-# DELTA_CERT_PASSWORD = os.environ["DELTA_CERT_PASSWORD"].strip()
-
 KEYCLOAK_URL = os.environ["KEYCLOAK_URL"].strip()
 KEYCLOAK_REALM = os.environ["KEYCLOAK_REALM"].strip()
 KEYCLOAK_CLIENT = os.environ["KEYCLOAK_CLIENT"].strip()

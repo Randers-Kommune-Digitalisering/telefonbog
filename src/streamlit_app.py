@@ -3,7 +3,7 @@ import streamlit as st
 from dataclasses import asdict
 from streamlit_keycloak import login
 
-from delta import get_cpr_search, get_dq_number_search, search  # , get_general_search
+from delta import get_cpr_search, get_dq_number_search, search
 from utils.utils import set_logging_configuration, verify_cpr, get_cpr_list
 from utils.config import KEYCLOAK_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT
 
@@ -53,14 +53,6 @@ if keycloak.authenticated:
         else:
             st.session_state.error = "Du har ikke de rigtgige rettigheder til at søge på CPR-numre"
 
-    # Removed - not working as intended
-    # def free_change():
-    #     st.session_state.cpr = ""
-    #     st.session_state.dq = ""
-    #     st.session_state.error = None
-    #     if st.session_state.free:
-    #         st.session_state.search = get_general_search(st.session_state.free, st.session_state.USER)
-
     def dq_change():
         st.session_state.cpr = ""
         st.session_state.free = ""
@@ -77,8 +69,6 @@ if keycloak.authenticated:
 
         with left_column:
             st.text_input("CPR-nummer", placeholder="CPR-nummer", key="cpr", on_change=cpr_change, disabled=not st.session_state.CPR)
-
-            # st.text_input("Søg (max 100 resultater)", placeholder="Navn, email eller telefonnummer", key="free", on_change=free_change) # Removed - not working as intended
 
         with right_column:
             st.text_input("DQ-nummer", placeholder="Brugernavn", key="dq", on_change=dq_change)
