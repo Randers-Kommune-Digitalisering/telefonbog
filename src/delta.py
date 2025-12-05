@@ -216,6 +216,8 @@ def get_dq_number_search(dq_number: str, user: dict = None) -> dict | None:
     :type dq_number: str
     :param user: User information dictionary containing 'username' and 'email' keys
     :type user: dict
+    :return: A search dictionary for querying Delta by DQ number if user is provided, otherwise None.
+    :rtype: dict | None
     """
     if user:
         return {
