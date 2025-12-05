@@ -9,5 +9,5 @@ API: Delta api, "Delta prod (ny)" i bitwarden
 
 ## Kør lokalt
 * Installer python og requirements i requirements.txt
-* Opsæt en en postgres database
+* Opsæt en postgres database
 * Kør med `python src\main.py` 
