@@ -4,6 +4,7 @@ from dataclasses import asdict
 from streamlit_keycloak import login
 
 from delta import get_cpr_search, get_dq_number_search, search
+from database import get_session
 from utils.utils import set_logging_configuration, verify_cpr, get_cpr_list
 from utils.config import KEYCLOAK_URL, KEYCLOAK_REALM, KEYCLOAK_CLIENT
 
@@ -11,6 +12,7 @@ set_logging_configuration()
 
 st.set_page_config(page_title="Telefonbog", page_icon="📞")
 st.markdown('<style>table {width:100%;}</style>', unsafe_allow_html=True)
+
 
 keycloak = login(
     url=KEYCLOAK_URL,
@@ -45,8 +47,15 @@ if keycloak.authenticated:
             st.session_state.dq = ""
             if st.session_state.cpr:
                 if verify_cpr(st.session_state.cpr):
-                    st.session_state.search = get_cpr_search(st.session_state.cpr, st.session_state.USER, st.session_state.CPR)
-                    st.session_state.error = None
+                    with get_session() as db_session:
+                        st.session_state.search = get_cpr_search(
+                            db_session=db_session,
+                            cpr=st.session_state.cpr,
+                            user=st.session_state.USER,
+                            has_cpr_rights=st.session_state.CPR
+                        )
+                        db_session.commit()
+                        st.session_state.error = None
                 else:
                     st.session_state.error = "Ugyldigt CPR-nummer"
                     st.session_state.search = None
@@ -118,11 +127,18 @@ if keycloak.authenticated:
                 try:
                     cpr_list = get_cpr_list(txt)
                     if cpr_list:
-                        cpr_dict_list = [get_cpr_search(cpr, st.session_state.USER, st.session_state.CPR) for cpr in cpr_list]
-                        search_result = [search(cpr_dict, st.session_state.USER) for cpr_dict in cpr_dict_list]
-                        email_list = [r[0]['E-mail'] if r[0]['DQ-nummer'] != '-' else 'IKKE_FUNDET' for r in search_result]
-                        emails = f'''{','.join(email_list)}'''
-                        st.code(emails)
+                        with get_session() as db_session:
+                            cpr_dict_list = [get_cpr_search(
+                                db_session=db_session,
+                                cpr=cpr,
+                                user=st.session_state.USER,
+                                has_cpr_rights=st.session_state.CPR
+                            ) for cpr in cpr_list]
+                            db_session.commit()
+                            search_result = [search(cpr_dict, st.session_state.USER) for cpr_dict in cpr_dict_list]
+                            email_list = [r[0]['E-mail'] if r[0]['DQ-nummer'] != '-' else 'IKKE_FUNDET' for r in search_result]
+                            emails = f'''{','.join(email_list)}'''
+                            st.code(emails)
                     else:
                         st.error('Ugyldigt CPR-nummer')
                 except Exception as e:

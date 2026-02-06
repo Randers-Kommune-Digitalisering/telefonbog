@@ -1,9 +1,9 @@
 import logging
+from sqlalchemy.orm import Session
 
 from utils.config import DELTA_URL, DELTA_AUTH_URL, DELTA_REALM, DELTA_CLIENT_ID, DELTA_CLIENT_SECRET
 from utils.api_requests import APIClient
 from models import Log
-from database import get_session
 
 logger = logging.getLogger(__name__)
 
@@ -16,11 +16,8 @@ def search(search_dict: dict = None, user: dict = None) -> list[dict] | None:
     Search for persons in Delta based on the provided search dictionary.
 
     :param search_dict: All search parameters for Delta graph query. Generated via get_cpr_search or get_dq_number_search
-    :type search_dict: dict
     :param user: User information dictionary containing 'username' and 'email' keys
-    :type user: dict
     :return: A list of dictionaries with person information (name, email, phone, mobile, department, DQ-number) or None if no results found
-    :rtype: list[dict] | None
     """
     if user:
         if search_dict:
@@ -72,24 +69,18 @@ def search(search_dict: dict = None, user: dict = None) -> list[dict] | None:
                     return people
 
 
-def get_cpr_search(cpr: str, user: dict = None, has_cpr_rights: bool = False) -> dict | None:
+def get_cpr_search(db_session: Session, cpr: str, user: dict = None, has_cpr_rights: bool = False) -> dict | None:
     """
     Generate a search dictionary for querying Delta by CPR number. Logs the search action in the database.
 
     :param cpr: CPR number to search for
-    :type cpr: str
     :param user: User information dictionary containing 'username' and 'email' keys
-    :type user: dict
     :param has_cpr_rights: Indicates if the user has rights to search by CPR number
-    :type has_cpr_rights: bool
     :return: A dictionary containing the search query if user and has_cpr_rights are provided, otherwise None.
-    :rtype: dict | None
     """
     if user and has_cpr_rights:
-        db_session = get_session()
         search_log = Log(username=user["username"], email=user["email"], message=f"Searched for cpr: {cpr}")
         db_session.add(search_log)
-        db_session.commit()
         return {
             "graphQueries": [
                 {
@@ -213,11 +204,8 @@ def get_dq_number_search(dq_number: str, user: dict = None) -> dict | None:
     Generate a search dictionary for querying Delta by DQ number. Logs the search action in the database.
 
     :param dq_number: DQ number to search for
-    :type dq_number: str
     :param user: User information dictionary containing 'username' and 'email' keys
-    :type user: dict
     :return: A search dictionary for querying Delta by DQ number if user is provided, otherwise None.
-    :rtype: dict | None
     """
     if user:
         return {
