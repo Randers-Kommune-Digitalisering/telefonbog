@@ -1,9 +1,9 @@
 import logging
+from sqlalchemy.orm import Session
 
 from utils.config import DELTA_URL, DELTA_AUTH_URL, DELTA_REALM, DELTA_CLIENT_ID, DELTA_CLIENT_SECRET
 from utils.api_requests import APIClient
 from models import Log
-from database import get_session
 
 logger = logging.getLogger(__name__)
 
@@ -11,7 +11,14 @@ logger = logging.getLogger(__name__)
 delta_client = APIClient(DELTA_URL, auth_url=DELTA_AUTH_URL, realm=DELTA_REALM, client_id=DELTA_CLIENT_ID, client_secret=DELTA_CLIENT_SECRET)
 
 
-def search(search_dict=None, user=None):
+def search(search_dict: dict | None = None, user: dict | None = None) -> list[dict] | None:
+    """
+    Search for persons in Delta based on the provided search dictionary.
+
+    :param search_dict: All search parameters for Delta graph query. Generated via get_cpr_search or get_dq_number_search
+    :param user: User information dictionary containing 'username' and 'email' keys
+    :return: A list of dictionaries with person information (name, email, phone, mobile, department, DQ-number) or None if no results found
+    """
     if user:
         if search_dict:
             res = delta_client.make_request(method='POST', path='api/object/graph-query', json=search_dict)
@@ -62,12 +69,18 @@ def search(search_dict=None, user=None):
                     return people
 
 
-def get_cpr_search(cpr, user=None, has_cpr_rights=False):
+def get_cpr_search(db_session: Session, cpr: str, user: dict | None = None, has_cpr_rights: bool = False) -> dict | None:
+    """
+    Generate a search dictionary for querying Delta by CPR number. Logs the search action in the database.
+
+    :param cpr: CPR number to search for
+    :param user: User information dictionary containing 'username' and 'email' keys
+    :param has_cpr_rights: Indicates if the user has rights to search by CPR number
+    :return: A dictionary containing the search query if user and has_cpr_rights are provided, otherwise None.
+    """
     if user and has_cpr_rights:
-        db_session = get_session()
         search_log = Log(username=user["username"], email=user["email"], message=f"Searched for cpr: {cpr}")
         db_session.add(search_log)
-        db_session.commit()
         return {
             "graphQueries": [
                 {
@@ -186,12 +199,15 @@ def get_cpr_search(cpr, user=None, has_cpr_rights=False):
         }
 
 
-def get_dq_number_search(dq_number, user=None):
+def get_dq_number_search(dq_number: str, user: dict | None = None) -> dict | None:
+    """
+    Generate a search dictionary for querying Delta by DQ number. Logs the search action in the database.
+
+    :param dq_number: DQ number to search for
+    :param user: User information dictionary containing 'username' and 'email' keys
+    :return: A search dictionary for querying Delta by DQ number if user is provided, otherwise None.
+    """
     if user:
-        # db_session = get_session()
-        # search_log = Log(username=user["username"], email=user["email"], message=f"Searched for DQ-number: {dq_number}")
-        # db_session.add(search_log)
-        # db_session.commit()
         return {
             "graphQueries": [
                 {
@@ -308,164 +324,3 @@ def get_dq_number_search(dq_number, user=None):
                 }
             ]
         }
-
-# Removed - not working as intended
-# def get_general_search(query, user=None, offset=0, limit=100):
-#     if user:
-#         logger.info(f'User {user["username"]} (email: {user["email"]}) is searching for: {query}')
-#         return {
-#             "graphQueries": [
-#                 {
-#                     "computeAvailablePages": True,
-#                     "graphQuery": {
-#                         "structure": {
-#                             "alias": "employee",
-#                             "userKey": "APOS-Types-Engagement",
-#                             "attributes": [
-#                                 {
-#                                     "alias": "email",
-#                                     "userKey": "APOS-Types-Engagement-Attribute-Email"
-#                                 },
-#                                 {
-#                                     "alias": "phone",
-#                                     "userKey": "APOS-Types-Engagement-Attribute-Phone"
-#                                 },
-#                                 {
-#                                     "alias": "mobile",
-#                                     "userKey": "APOS-Types-Engagement-Attribute-Mobile"
-#                                 }
-#                             ],
-#                             "relations": [
-#                                 {
-#                                     "alias": "person",
-#                                     "title": "APOS-Types-Engagement-TypeRelation-Person",
-#                                     "userKey": "APOS-Types-Engagement-TypeRelation-Person",
-#                                     "typeUserKey": "APOS-Types-Person",
-#                                     "direction": "OUT",
-#                                     "relations": [
-#                                         {
-#                                             "alias": "user",
-#                                             "userKey": "APOS-Types-User-TypeRelation-Person",
-#                                             "typeUserKey": "APOS-Types-User",
-#                                             "direction": "IN"
-#                                         }
-#                                     ]
-#                                 },
-#                                 {
-#                                     "alias": "unit",
-#                                     "title": "APOS-Types-Engagement-TypeRelation-AdmUnit",
-#                                     "userKey": "APOS-Types-Engagement-TypeRelation-AdmUnit",
-#                                     "typeUserKey": "APOS-Types-AdministrativeUnit",
-#                                     "direction": "OUT"
-#                                 }
-#                             ]
-#                         },
-#                         "criteria": {
-#                             "type": "OR",
-#                             "criteria": [
-#                                 {
-#                                     "type": "MATCH",
-#                                     "operator": "LIKE",
-#                                     "left": {
-#                                         "source": "DEFINITION",
-#                                         "alias": "employee.email"
-#                                     },
-#                                     "right": {
-#                                         "source": "STATIC",
-#                                         "value": f"%{query}%"
-#                                     }
-#                                 },
-#                                 {
-#                                     "type": "MATCH",
-#                                     "operator": "LIKE",
-#                                     "left": {
-#                                         "source": "DEFINITION",
-#                                         "alias": "employee.phone"
-#                                     },
-#                                     "right": {
-#                                         "source": "STATIC",
-#                                         "value": f"%{query}%"
-#                                     }
-#                                 },
-#                                 {
-#                                     "type": "MATCH",
-#                                     "operator": "LIKE",
-#                                     "left": {
-#                                         "source": "DEFINITION",
-#                                         "alias": "employee.mobile"
-#                                     },
-#                                     "right": {
-#                                         "source": "STATIC",
-#                                         "value": f"%{query}%"
-#                                     }
-#                                 },
-#                                 {
-#                                     "type": "MATCH",
-#                                     "operator": "LIKE",
-#                                     "left": {
-#                                         "source": "DEFINITION",
-#                                         "alias": "employee.$name"
-#                                     },
-#                                     "right": {
-#                                         "source": "STATIC",
-#                                         "value": f"%{query}%"
-#                                     }
-#                                 }
-#                             ],
-#                             "type": "AND",
-#                             "criteria": [
-#                                 {
-#                                     "type": "MATCH",
-#                                     "operator": "EQUAL",
-#                                     "left": {
-#                                         "source": "DEFINITION",
-#                                         "alias": "employee.$state"
-#                                     },
-#                                     "right": {
-#                                         "source": "STATIC",
-#                                         "value": "STATE_ACTIVE"
-#                                     }
-#                                 }
-#                             ]
-#                         },
-#                         "projection": {
-#                             "identity": True,
-#                             "state": True,
-#                             "attributes": [
-#                                 "APOS-Types-Engagement-Attribute-Mobile",
-#                                 "APOS-Types-Engagement-Attribute-Phone",
-#                                 "APOS-Types-Engagement-Attribute-Email"
-#                             ],
-#                             "typeRelations": [
-#                                     {
-#                                         "userKey": "APOS-Types-Engagement-TypeRelation-Person",
-#                                         "projection": {
-#                                             "state": True,
-#                                             "attributes": [
-#                                                 "APOS-Types-Person-Attribute-SurnameAndName"
-#                                             ],
-#                                             "incomingTypeRelations": [
-#                                                 {
-#                                                     "userKey": "APOS-Types-User-TypeRelation-Person",
-#                                                     "projection": {
-#                                                         "identity": True
-#                                                     }
-#                                                 }
-#                                             ]
-#                                         }
-#                                     },
-#                                     {
-#                                         "userKey": "APOS-Types-Engagement-TypeRelation-AdmUnit",
-#                                         "projection": {
-#                                             "identity": True
-#                                         }
-#                                     }
-#                                 ]
-#                         }
-#                     },
-#                     "validDate": "NOW",
-#                     "limit": limit,
-#                     "offset": offset
-#                 }
-#             ]
-#         }
