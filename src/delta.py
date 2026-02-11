@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 delta_client = APIClient(DELTA_URL, auth_url=DELTA_AUTH_URL, realm=DELTA_REALM, client_id=DELTA_CLIENT_ID, client_secret=DELTA_CLIENT_SECRET)
 
 
-def search(search_dict: dict = None, user: dict = None) -> list[dict] | None:
+def search(search_dict: dict | None = None, user: dict | None = None) -> list[dict] | None:
     """
     Search for persons in Delta based on the provided search dictionary.
 
@@ -69,7 +69,7 @@ def search(search_dict: dict = None, user: dict = None) -> list[dict] | None:
                     return people
 
 
-def get_cpr_search(db_session: Session, cpr: str, user: dict = None, has_cpr_rights: bool = False) -> dict | None:
+def get_cpr_search(db_session: Session, cpr: str, user: dict | None = None, has_cpr_rights: bool = False) -> dict | None:
     """
     Generate a search dictionary for querying Delta by CPR number. Logs the search action in the database.
 
@@ -199,7 +199,7 @@ def get_cpr_search(db_session: Session, cpr: str, user: dict = None, has_cpr_rig
         }
 
 
-def get_dq_number_search(dq_number: str, user: dict = None) -> dict | None:
+def get_dq_number_search(dq_number: str, user: dict | None = None) -> dict | None:
     """
     Generate a search dictionary for querying Delta by DQ number. Logs the search action in the database.
 
